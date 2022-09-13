@@ -8,9 +8,7 @@ kubeconform -v
 echo "Kustomize version:"
 kustomize version
 
-cd /github/workspace
-
-DIR_ROOT=$(git rev-parse --show-toplevel)
+DIR_ROOT="/github/workspace"
 
 for service in $(echo "$2" | sed "s/,/ /g")
 do

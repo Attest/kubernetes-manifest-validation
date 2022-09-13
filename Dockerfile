@@ -1,7 +1,7 @@
 FROM ubuntu:22.04
 
 RUN apt-get update
-RUN apt-get install -y curl git
+RUN apt-get install -y curl
 
 # INSTALL KUBECONFORM
 ENV KUBECONFORM_VERSION=v0.4.13
