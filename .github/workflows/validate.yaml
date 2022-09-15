@@ -1,0 +1,48 @@
+name: 'Validate Kubernetes Manifests'
+
+on:
+  workflow_call:
+    inputs:
+      envs:
+        description: 'Comma-separated list (e.g. `prod,qa`) of kustomize overlays (env names) to validate. The action can detect and dynamically validate all overlays when this variable is set to `auto`'
+        type: string
+        default: 'auto'
+      service:
+        description: 'The folder name of the service you want to validate. If given a comma separated list, will iterate over all'
+        type: string
+        default: '.'
+    secrets:
+      AWS_ACCESS_KEY:
+        required: true
+      AWS_SECRET_KEY:
+        required: true
+      PAT_ATTEST_ADMIN_CI:
+        required: true
+      VALIDATION_IMAGE:
+        required: true
+
+jobs:
+  validate_manifests:
+    name: "Validate Kubernetes Manifests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT_ATTEST_ADMIN_CI }}
+          submodules: true
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: eu-west-1
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      # Pull separately to keep ouput on validation step clean
+      - name: Pull image from ECR
+        run: |
+          docker pull ${{ secrets.VALIDATION_IMAGE }}
+      - name: Validate
+        run: |
+          docker run -v $GITHUB_WORKSPACE:/github/workspace ${{ secrets.VALIDATION_IMAGE }} ${{ inputs.envs }} ${{ inputs.service }}
