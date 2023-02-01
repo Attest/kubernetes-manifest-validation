@@ -11,6 +11,10 @@ on:
         description: 'The folder name of the service you want to validate. If given a comma separated list, will iterate over all'
         type: string
         default: '.'
+      k8s-dir:
+        description: 'The path where the kubernetes manifests and overlays can be found. For most situations this is likely `k8s` or `.infra/k8s`. If this is the case, this input can be left unset.'
+        type: string
+        default: 'k8s'
     secrets:
       AWS_ACCESS_KEY:
         required: true
@@ -45,4 +49,4 @@ jobs:
           docker pull ${{ secrets.VALIDATION_IMAGE }}
       - name: Validate
         run: |
-          docker run -v $GITHUB_WORKSPACE:/github/workspace ${{ secrets.VALIDATION_IMAGE }} ${{ inputs.envs }} ${{ inputs.service }}
+          docker run -v $GITHUB_WORKSPACE:/github/workspace ${{ secrets.VALIDATION_IMAGE }} ${{ inputs.envs }} ${{ inputs.service }} ${{ inputs.k8s-dir }}
