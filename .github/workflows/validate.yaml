@@ -15,6 +15,10 @@ on:
         description: 'The path where the kubernetes manifests and overlays can be found. For most situations this is likely `k8s` or `.infra/k8s`. If this is the case, this input can be left unset.'
         type: string
         default: 'k8s'
+      k8s-versions:
+        description: 'The kubernetes versions to validate against'
+        type: string
+        default: ''
     secrets:
       AWS_ACCESS_KEY:
         required: true
@@ -49,4 +53,4 @@ jobs:
           docker pull ${{ secrets.VALIDATION_IMAGE }}
       - name: Validate
         run: |
-          docker run -v $GITHUB_WORKSPACE:/github/workspace ${{ secrets.VALIDATION_IMAGE }} ${{ inputs.envs }} ${{ inputs.service }} ${{ inputs.k8s-dir }}
+          docker run -v $GITHUB_WORKSPACE:/github/workspace ${{ secrets.VALIDATION_IMAGE }} ${{ inputs.envs }} ${{ inputs.service }} ${{ inputs.k8s-dir }} ${{ inputs.k8s-versions }}
