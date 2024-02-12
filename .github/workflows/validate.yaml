@@ -18,7 +18,7 @@ on:
       k8s-versions:
         description: 'The kubernetes versions to validate against'
         type: string
-        default: ''
+        default: '1.25.16'
     secrets:
       AWS_ACCESS_KEY:
         required: true
