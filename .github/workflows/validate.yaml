@@ -34,20 +34,20 @@ jobs:
     name: "Validate Kubernetes Manifests"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT_ATTEST_ADMIN_CI }}
           submodules: true
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: eu-west-1
       - name: Login to ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-      # Pull separately to keep ouput on validation step clean
+        uses: aws-actions/amazon-ecr-login@v2
+      # Pull separately to keep output on validation step clean
       - name: Pull image from ECR
         run: |
           docker pull ${{ secrets.VALIDATION_IMAGE }}
