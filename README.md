@@ -7,11 +7,13 @@ GitHub reusable workflow to run Kubernetes manifest validation using Attest inte
 To use this workflow, add a new workflow file to your `.github/workflows` directory containing the following:
 ```yaml
 name: Validate Kubernetes Manifests
-on: pull_request
+on:
+  - pull_request
+  - workflow_dispatch
 
 jobs:
   validate-kubernetes-manifests:
-    uses: attest/kubernetes-manifest-validation/.github/workflows/validate.yaml@v1.0.0
+    uses: attest/kubernetes-manifest-validation/.github/workflows/validate.yaml@v1.1.1
     secrets:
       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -24,7 +26,7 @@ subdirectories containing manifests, you can specify these using the `service` f
 manifests in the `maker` and `taker` subdirectories, it can be configured like this:
 ```yaml
 validate-kubernetes-manifests:
-  uses: attest/kubernetes-manifest-validation/.github/workflows/validate.yaml@v1.0.0
+  uses: attest/kubernetes-manifest-validation/.github/workflows/validate.yaml@v1.1.1
   with:
     service: 'maker,taker'
   secrets:
